@@ -21,7 +21,7 @@ class Encoder(object):
         """Returns variational mean and std vectors. 
         """
         pass
-        
+
     def get_params(self):
         """Returns list of parameters (shared variables) of the encoder. 
         """
@@ -301,7 +301,7 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     isshared = lambda t: isinstance(t, theano.compile.sharedvalue.SharedVariable)
     tensors = [(t.type() if isshared(t) else t) for t in minibatch_tensors]
     updates = OrderedDict(
-        {t: t_ for t, t_ in zip(minibatch_tensors, tensors) if isshared(t)}
+        {t: t_ for t, t_ in zip(minibatch_tensors, tensors)}
     )
     elbo = theano.clone(elbo, updates, strict=False)
 
@@ -324,7 +324,7 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
             else:
                 avg_elbo = elbos[i-n//10:i].mean()
                 print('Iteration {0} [{1}%]: Average ELBO = {2}'.format(i, 100*i//n, avg_elbo.round(2)))
-    
+
     if verbose:
         print('Finished [100%]: ELBO = {}'.format(elbos[-1].round(2)))
 
