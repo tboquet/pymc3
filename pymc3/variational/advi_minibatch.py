@@ -269,6 +269,8 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     rvs = lambda x: [rv for rv in x]
     global_RVs = list(set(vars) - set(rvs(local_RVs) + rvs(observed_RVs)))
 
+    print(global_RVs)
+
     # Ordering for concatenation of random variables
     global_order = ArrayOrdering([v for v in global_RVs])
     local_order = ArrayOrdering([v for v in local_RVs])
