@@ -255,7 +255,8 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     local_RVs, observed_RVs = _get_rvss(minibatch_RVs, local_RVs, observed_RVs,
                                         minibatch_tensors, total_size)
 
-    print(local_RVs, observed_RVs)
+    print(minibatch_RVs, local_RVs, observed_RVs,
+                                        minibatch_tensors, total_size)
 
     # Replace local_RVs with transformed variables
     ds = model.deterministics
@@ -302,6 +303,8 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     # Replace input shared variables with tensors
     isshared = lambda t: isinstance(t, theano.compile.sharedvalue.SharedVariable)
     tensors = [(t.type() if isshared(t) else t) for t in minibatch_tensors]
+
+    print(tensors)
     updates = OrderedDict(
         {t: t_ for t, t_ in zip(minibatch_tensors, tensors)}
     )
