@@ -252,8 +252,10 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     _check_minibatches(minibatch_tensors, minibatches)
 
     # For backward compatibility in how input arguments are given
-    local_RVs, observed_RVs = _get_rvss(minibatch_RVs, local_RVs, observed_RVs, 
+    local_RVs, observed_RVs = _get_rvss(minibatch_RVs, local_RVs, observed_RVs,
                                         minibatch_tensors, total_size)
+
+    print(local_RVs, observed_RVs)
 
     # Replace local_RVs with transformed variables
     ds = model.deterministics
@@ -277,18 +279,18 @@ def advi_minibatch(vars=None, start=None, model=None, n=5000, n_mcsamples=1,
     replace = replace_g
     if replace_l is not None: replace.update(replace_l)
     logp = theano.clone(logpt, replace, strict=False)
-    elbo = _elbo_t_new(logp, uw_g, uw_l, inarray_g, inarray_l, 
+    elbo = _elbo_t_new(logp, uw_g, uw_l, inarray_g, inarray_l,
                        n_mcsamples, random_seed)
     del logpt
 
     # Variational parameters for global RVs
-    uw_global_shared, bij = _init_uw_global_shared(start, global_RVs, 
+    uw_global_shared, bij = _init_uw_global_shared(start, global_RVs,
                                                    global_order)
 
     # Variational parameters for local RVs, encoded from samples in mini-batches
     if 0 < len(local_RVs):
         uws = [uw for _, (uw, _) in local_RVs.items()]
-        uw_local_encoded = tt.concatenate([uw[0].ravel() for uw in uws] + 
+        uw_local_encoded = tt.concatenate([uw[0].ravel() for uw in uws] +
                                           [uw[1].ravel() for uw in uws])
 
     # Replace tensors in ELBO
